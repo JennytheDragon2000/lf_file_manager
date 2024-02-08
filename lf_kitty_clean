@@ -1,0 +1,4 @@
+#!/bin/sh
+exec kitten icat --clear
+# exec kitten --transfer-mode file icat --clear
+
