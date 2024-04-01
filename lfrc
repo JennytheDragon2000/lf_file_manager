@@ -4,6 +4,7 @@ set cleaner ctpvclear
 &ctpvquit $id
 
 
+
 cmd fzf_current ${{
     res="$(find . -maxdepth 1 | fzf --reverse --header='Jump to location')"
     if [ -n "$res" ]; then
@@ -32,4 +33,18 @@ cmd fzf_all ${{
     fi
 }}
 map <c-j> :fzf_all
+
+
+cmd unarchive ${{
+  case "$f" in
+      *.zip) unzip "$f" ;;
+      *.tar.gz) tar -xzvf "$f" ;;
+      *.tar.xz) tar -xJf "$f" ;;
+      *.tar.bz2) tar -xjvf "$f" ;;
+      *.tar) tar -xvf "$f" ;;
+      *.rar) unar "$f" ;;
+      *) echo "Unsupported format" ;;
+  esac
+}}
+map au unarchive
 
