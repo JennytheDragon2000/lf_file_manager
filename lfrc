@@ -48,3 +48,67 @@ cmd unarchive ${{
 }}
 map au unarchive
 
+
+cmd open ${{
+case "$f" in
+*.xopp) nohup xournalpp "$f"  &[angledBracket /dev/null & ;;
+*.odt|*.docx) nohup libreoffice "$f" &[angledBracket /dev/null & ;;
+*.pptx) nohup libreoffice "$f" &[angledBracket /dev/null & ;;
+*.xcf|*.psd) nohup gimp "$f" &[angledBracket /dev/null & ;;
+*.pdf | *.epub) nohup zathura "$f" &[angledBracket /dev/null & ;;
+*.ipynb) nohup jupyter notebook "$f" &[angledBracket /dev/null & ;;
+*.png|*.jpg|*.*.heic|*.jpeg|*.JPG|*.webp) nohup feh "$f" &[angledBracket /dev/null & ;;
+*.mp4|*.avi|*.mkv|*.mp3|*.mov) nohup mpv "$f" &[angledBracket /dev/null & ;;
+#*) nohup kitty -e nvim "$f" &[angledBracket /dev/null & ;;
+esac
+}}
+map o open
+
+cmd permissionExecute ${{
+chmod +x "$f"
+}}
+
+cmd touch ${{
+clear
+printf "File Name: "
+read -r ans
+touch "$ans"
+}}
+
+cmd mkdir ${{
+  clear
+  printf "Directory Name: "
+  read -r ans
+  mkdir "$ans"
+}}
+
+cmd zipper ${{
+  #cd "$(dirname "$f")" not necessary
+  filename=$(basename -- "$f") #this should be input, NOT $f
+  zipName="${filename%.*}.zip"  #zipped name
+  #echo -e "ZipName \n $zipName \n filename $filename"
+  zip -r "$zipName" "$filename" #it was "$f", which meant whole path will be taken...
+}}
+
+cmd diskUsage ${{
+clear
+du -sh "$f" | awk '{print $1}'
+read -n 1
+}}
+
+cmd setbg ${{
+feh --no-fehbg --bg-fill "$f"
+}}
+
+cmd trash ${{
+files=$(printf "%s" "$fx" | xargs -d '\n' -n 1 echo)
+while [ "$files" ]; do
+  file=${files%%$'\n'*}
+}}
+
+
+map st :{{ set sortby atime; set reverse; }}
+map sn :{{ set sortby natural; set info size; set noreverse; }}
+map t :{{ filter ".tex"; set info; }}
+map f :filter ""
+map A :rename "$f"
